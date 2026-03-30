@@ -1,5 +1,5 @@
 # The Odin Project Assignment
-#### Practice: Implementing SOLID principles and bundling with webpack
+### Practice: Implementing SOLID principles and bundling with webpack
 
 ### CSS Reset
 This project uses Josh Comeau's CSS Reset.
