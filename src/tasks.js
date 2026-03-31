@@ -4,6 +4,7 @@ class Task {
         this.description = description;
         this.dueDate = dueDate;
         this.project = project;
+        this.id = crypto.randomUUID();
     }
 
     deleteTask() {
@@ -25,4 +26,8 @@ class Task {
     editDescription() {
         //logic to allow user to update the description
     }
+}
+
+export {
+    Task,
 }
