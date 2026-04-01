@@ -1,3 +1,16 @@
+import {saveToLocal} from "./storage.js";
+
+// VARIABLES
+let allTasks = load("tasks")
+
+
+
+function addTask(name, description, dueDate, project) {
+  const task = new Task(name, description, dueDate, project);
+  allTasks.push(task);
+  saveToLocal("tasks", allTasks);
+}
+
 class Task {
     constructor(name, description, dueDate, project) {
         this.name = name;
@@ -5,6 +18,7 @@ class Task {
         this.dueDate = dueDate;
         this.project = project;
         this.id = crypto.randomUUID();
+        
     }
 
     deleteTask() {
@@ -29,5 +43,5 @@ class Task {
 }
 
 export {
-    Task,
+    addTask,
 }
