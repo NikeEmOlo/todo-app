@@ -47,8 +47,35 @@ p, h1, h2, h3, h4, h5, h6 {
     --sidebar-color: #eff1f2;
     --main-accent-blue: #0058bb;
     --accent-blue-muted: rgba(108, 160, 255, 0.8);
+    --bright-white: white;
     --black-text: #2c2f30;
     --muted-text: #595C5D;
+}
+/*------GENERAL*/
+.tag{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--accent-blue-muted);
+    border-radius: 1rem;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    font-variant: all-small-caps;
+    color: var(--main-accent-blue);
+}
+
+p.normal {
+    font-size: 1rem;
+}
+
+p.muted {
+    color: #595C5D;
+}
+
+a {
+    text-decoration: none;
+    color: var(--main-accent-blue);
 }
 /* ------PAGE GRID LAYOUT */
 .page-grid {
@@ -152,6 +179,7 @@ p, h1, h2, h3, h4, h5, h6 {
 
 
 
+
 /* ------TO BE MOVED TO DEDICATED CSS FILE */
 .today-sec{
     display: flex;
@@ -175,36 +203,73 @@ p, h1, h2, h3, h4, h5, h6 {
         font-variant: all-small-caps;
         color: var(--muted-text);
     }
-
-    .task-counter{
-        background-color: var(--accent-blue-muted);
-        border-radius: 1rem;
-        padding: 0 0.5rem;
-    }
-
-    .counter-text {
-        color: var(--main-accent-blue);
-        font-size: 0.875rem;
-        font-weight: bold;
-        font-variant: all-small-caps;
-    }
 }
 
-.upcoming-sec {
+.task-sec-2 {
     display: flex;
     flex-direction: column;
     width: clamp(300px, 80%, 960px);
-    min-height: 22.25rem;
+    min-height: 10rem;
     gap: 0.75rem;
 
-    .upcoming-bar {
+    .task-sec-2-bar {
         display: flex;
         align-items: center;
 
     }
 
-    .sec-2-title {
+    .task-sec-2-title {
         font-size: 2rem;
         font-weight: 600;
+    }
+}
+
+.tile-wrap {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+
+    .tile-large {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        padding: 32px;
+        border-radius: 1rem;
+        background-color: gray;
+    }
+}
+
+.tile-long {
+        display: flex;
+        flex: 1 1 auto;
+        width: 100%;
+        padding: 1.5rem;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 1rem;
+        background-color: var(--bright-white);
+
+    .icon-filled {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        background-color: rgba(38, 230, 255, 0.2);
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .icon-filled > img {
+        height: 1.25rem;
+        width: auto;
+    }
+    a {
+        margin-left: auto;
+    }
+
+    a > h4 {
+        font-size: 1rem;
+        font-variant: all-small-caps;
+        font-weight: 700;
     }
 }
