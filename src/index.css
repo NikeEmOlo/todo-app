@@ -112,7 +112,7 @@ a {
     background-color: transparent;
     padding: 0;
 }
-/* ------MAIN SECTION HEADER */
+/* ------TAB HEADER */
 .main .header { 
     .logo {
         margin-right: clamp(20px, 6.75vw, 6.75rem);
@@ -151,7 +151,7 @@ a {
     }
 }
 /* ------MAIN SECTION CONTENT */
-#tab-content {
+.tab {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
