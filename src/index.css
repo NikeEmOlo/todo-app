@@ -63,26 +63,68 @@ p, h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     font-variant: all-small-caps;
     color: var(--main-accent-blue);
+    max-width: fit-content;
+}
+
+.minimal {
+    border: none;
+    background-color: transparent;
+}
+
+h2{
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+h2.lighter-txt {
+    font-weight:400;
+}
+
+h5 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant: all-small-caps;
+    }
+
+h6 {
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 p.normal {
     font-size: 1rem;
 }
 
-p.muted {
-    color: #595C5D;
+.muted {
+    color: var(--muted-text);
 }
 
 a {
     text-decoration: none;
     color: var(--main-accent-blue);
 }
+
+.icon-filled{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    height: 2rem;
+    width: 2rem;
+
+    img {
+        height: 1.25rem;
+        width: auto;
+    }
+}
+
+
 /* ------PAGE GRID LAYOUT */
 .page-grid {
     display: grid;
     grid-template-columns: clamp(250px, 25%, 325px) 1fr;
     min-width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
 }
 
@@ -154,9 +196,9 @@ a {
 .tab {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    flex: 1 1 0;
-    overflow-y: auto;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    overflow-y: visible;
     padding: 0 4rem;
 }
 

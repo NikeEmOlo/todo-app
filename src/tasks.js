@@ -1,14 +1,15 @@
 import {saveToLocal} from "./storage.js";
+import { displayTask } from "./display.js";
 
-// VARIABLES
-let allTasks = load("tasks")
-
+// // VARIABLES
+let allTasks = []
 
 
 function addTask(name, description, dueDate, project) {
-  const task = new Task(name, description, dueDate, project);
-  allTasks.push(task);
-  saveToLocal("tasks", allTasks);
+    const task = new Task(name, description, dueDate, project);
+    allTasks.push(task);
+    saveToLocal("tasks", allTasks);
+    displayTask(task)
 }
 
 class Task {
@@ -18,7 +19,6 @@ class Task {
         this.dueDate = dueDate;
         this.project = project;
         this.id = crypto.randomUUID();
-        
     }
 
     deleteTask() {
