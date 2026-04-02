@@ -266,11 +266,16 @@ a {
         color: var(--bright-white);
         font-size: 1rem;
         font-weight: 500;
+        transition: all 0.1s ease-in
     }
 
     .sb-button::before {
         content: "+";
         font-size: 1.25rem;
+    }
+
+    .sb-button:hover {
+        transform: scale(1.05);
     }
 }
 
