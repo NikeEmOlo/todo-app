@@ -160,7 +160,7 @@ a {
     padding: 0 4rem;
 }
 
-.page-title {
+.tab-title {
     display: flex;
     flex-direction: column;
     width: 80%;
@@ -170,7 +170,7 @@ a {
         font-weight: 400;
     }
 
-    .subtitle {
+    p {
         font-size: 1.125rem;
         font-weight: 300;
     }
