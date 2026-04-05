@@ -131,18 +131,23 @@ a {
 .sidebar, .main {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+
 }
 
 .sidebar {
     background-color: var(--sidebar-color);
     padding: 1.5rem 2rem;
-        max-height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
 }
 
 .main {
     background-color: var(--main-bg-color);
     padding: 1.5rem;
+    overflow-y: hidden;
+    height: 100vh;
 }
 
 .header {
@@ -153,9 +158,13 @@ a {
     width: 100%;
     background-color: transparent;
     padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 /* ------TAB HEADER */
 .main .header { 
+
     .logo {
         margin-right: clamp(20px, 6.75vw, 6.75rem);
         color: var(--main-accent-blue);
@@ -196,9 +205,11 @@ a {
 .tab {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    flex: 1 1 auto;
-    overflow-y: visible;
+    /* justify-content: flex-start; */
+    min-height: 100vh;
+    flex: 1 1 0;
+    overflow-y: auto;
+    min-height:0;
     padding: 0 4rem;
 }
 
@@ -210,6 +221,7 @@ a {
     h1 {
         font-size: 3.75rem;
         font-weight: 400;
+        margin-top: 3rem;
     }
 
     p {
