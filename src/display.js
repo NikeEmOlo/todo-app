@@ -1,6 +1,6 @@
 import "./tasks.css"
 
-const activeTab = tasks;
+let activeTab = "tasks";
 
 // -------CREATING ELEMENTS CLASSES------------//
 class Element {
@@ -88,25 +88,54 @@ class TaskCard extends Div {
 }
 
 //------DISPLAY ELEMENTS ON THE PAGE-----//
-function renderTabs() {
-    
-}
-
-function updateSidebarButton() {
-    switch (activeTabs) {
-        case tasks:
-            //do this and that
-            break;
-        case projects:
-            //do this and that
-            break;
-        case completed:
-            //do this and that
-            break;
+function initTabs() {
+    const tabs = {
+        tasks: document.querySelector("#tasks-tab"),
+        projects: document.querySelector("#projects-tab"),
+        completed: document.querySelector("#completed-tab"),
     }
+    const tabButtons = document.querySelectorAll(".tab-button")
+    const sidebarBtn = document.querySelector(".sb-button")
+    const tabConfig = {
+        Tasks: {
+            active: "tasks",
+            tab: "#tasks-tab",
+            btnLabel: "Add Task",
+            // btnFn: () => //Do something,
+        },
+        Projects: {
+            active: "projects",
+            tab: "#projects-tab",
+            btnLabel: "Add Project",
+
+        },
+        Completed: {
+            active: "completed",
+            tab: "#completed-tab",
+            btnLabel: "Add Task",
+        },
+    }
+
+    tabs.tasks.style.display = 'flex';
+    tabs.projects.style.display = 'none';
+    tabs.completed.style.display = 'none'
+
+    tabButtons.forEach(element => {
+        element.addEventListener("click", (e) => {
+            tabController(e, tabs, sidebarBtn, tabConfig)})
+    });
+
 }
 
+function tabController(e, tabs, sidebarBtn, tabConfig) { 
+    const config = tabConfig[e.currentTarget.textContent]
+    activeTab = config.active
+    Object.values(tabs).forEach(tab => tab.style.display = 'none');
+    document.querySelector(config.tab).style.display = 'flex';
 
+    sidebarBtn.textContent = config.btnLabel;
+    // sbButton.onClick = config.btnFn
+}
 
 function displayTask(task) {
     new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
@@ -116,4 +145,5 @@ function displayTask(task) {
 
 export {
     displayTask,
+    initTabs,
 }
