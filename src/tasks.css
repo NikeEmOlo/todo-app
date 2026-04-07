@@ -90,6 +90,10 @@
         border-radius: 1rem;
     }
 
+    .tile-large > h2 {
+        font-size: clamp(1.25rem, 2vw, 2rem)
+    }
+
     .first {
         background-color: #eff1f2;
     }
