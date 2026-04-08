@@ -101,24 +101,27 @@ function initTabs() {
             active: "tasks",
             tab: "#tasks-tab",
             btnLabel: "Add Task",
-            // btnFn: () => //Do something,
+            onClick: () => {
+                document.querySelector("#add-task-modal").showModal()
+            },
         },
         Projects: {
             active: "projects",
             tab: "#projects-tab",
             btnLabel: "Add Project",
-
+            onClick: () => document.querySelector("#add-project-modal").showModal(),
         },
         Completed: {
             active: "completed",
             tab: "#completed-tab",
             btnLabel: "Add Task",
+            onClick: () => document.querySelector("#add-task-modal").showModal(),
         },
     }
 
-    tabs.tasks.style.display = 'flex';
-    tabs.projects.style.display = 'none';
-    tabs.completed.style.display = 'none'
+    Object.values(tabs).forEach(tab => tab.style.display = "none")
+    tabs.tasks.style.display = "flex";
+    sidebarBtn.onclick = tabConfig.Tasks.onClick;
 
     tabButtons.forEach(element => {
         element.addEventListener("click", (e) => {
@@ -134,7 +137,7 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
     document.querySelector(config.tab).style.display = 'flex';
 
     sidebarBtn.textContent = config.btnLabel;
-    // sbButton.onClick = config.btnFn
+    sidebarBtn.onclick = config.onClick;
 }
 
 function displayTask(task) {
