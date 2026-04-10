@@ -128,6 +128,7 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
+    setupCloseModals()
 }
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
@@ -143,6 +144,31 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
 function displayTask(task) {
     new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
 }
+
+function setupCloseModals() {
+    document.querySelector("#add-task-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-task-modal").close();
+    });
+
+    document.querySelector("#close-task-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-task-modal").close();
+    })
+
+    document.querySelector("#add-project-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-project-modal").close();
+    });
+
+    document.querySelector("#close-project-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-project-modal").close();
+    })
+}
+
+
+
 
 
 
