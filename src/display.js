@@ -163,9 +163,14 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
 }
 
 function formValidation(e) {
-   const formData = new FormData(e.currentTarget);
-   const data = Object.fromEntries(formData);
-   console.log(data);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+   
+    if (data.project) {
+        data.project = "#" + data.project.toLowerCase().split(" ").join("-");
+    }
+
+    console.log(data)
 }                                           
 
 

@@ -94,13 +94,13 @@
     <dialog id="add-task-modal">
         <form id="task-form">
             <label for="task-name">What do you need to get done?</label>
-            <input type="text" name="task" id="task-name" max-length="75" required>
+            <input type="text" name="task" id="task-name" maxlength="75" required>
             <label for="task-description">Additional information</label>
-            <input type="text" name="description" id="task-description" max-length="500">
+            <input type="text" name="description" id="task-description" maxlength="1000">
             <label for="due-date">When is it due?</label>
             <input type="date" name="due-date" id="due-date" required>
             <label for="project">Assign to a project</label>
-            <input type="text" name="project" id="project" placeholder="General">
+            <input type="text" name="project" id="project" placeholder="#general" maxlength="20">
             <button id="submit-task-btn" type="submit">Add Task</button>
             <button id="close-task-btn" type="button">Close</button>
         </form>
