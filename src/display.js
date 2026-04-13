@@ -168,7 +168,10 @@ function formValidation(e) {
    
     if (data.project) {
         data.project = "#" + data.project.toLowerCase().split(" ").join("-");
+    } else {
+        data.project = "#general"
     }
+
 
     console.log(data)
 }                                           
