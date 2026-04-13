@@ -5,16 +5,16 @@ import { displayTask } from "./display.js";
 let allTasks = []
 
 
-function addTask(name, description, dueDate, project) {
-    const task = new Task(name, description, dueDate, project);
+function addTask(taskData) {
+    const task = new Task(taskData);
     allTasks.push(task);
     saveToLocal("tasks", allTasks);
     displayTask(task)
 }
 
 class Task {
-    constructor(name, description, dueDate, project) {
-        this.name = name;
+    constructor({task, description, dueDate, project}) {
+        this.title = task;
         this.description = description;
         this.dueDate = dueDate;
         this.project = project;
@@ -41,8 +41,6 @@ class Task {
         //logic to allow user to update the description
     }
 }
-
-
 
 export {
     addTask,

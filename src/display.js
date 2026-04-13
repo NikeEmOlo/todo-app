@@ -1,4 +1,5 @@
 import "./tasks.css"
+import { addTask } from "./tasks.js";
 
 let activeTab = "tasks";
 
@@ -65,24 +66,25 @@ class Text extends Element {
 }
 
 class TaskCard extends Div {
-    constructor(task) {
+    constructor(task, date) {
         super(['task-card'], {'data-id': task.UUID})
 
         this.checkbox = new Input(['checkbox'], {type: 'checkbox'})
         this.checkbox.el.id = `checkbox-${task.UUID}`
         this.append(this.checkbox)
 
-        this.label = new Label(task.name, ['task-label'], {for: `checkbox-${task.UUID}`})
+        this.label = new Label(task.title, ['task-label'], {for: `checkbox-${task.UUID}`})
         this.append(this.label)
 
         this.taskInfoWrapper = new Div(['task-info-wrap'])
         this.append(this.taskInfoWrapper)
 
-        //appendTo taskInfoWrap
+        //append the following to taskInfoWrap
         this.projectTag = new Div(['tag'])
         this.projectTag.el.textContent = task.project;
         this.projectTag.appendTo(this.taskInfoWrapper)
-        this.timestamp = new Button(new Text('h6', 'Due: 00:00 / Today', ['muted']), ['tag', 'minimal'])
+
+        this.timestamp = new Button(new Text('h6', `Due: ${date}`, ['muted']), ['tag', 'minimal'])
         this.timestamp.appendTo(this.taskInfoWrapper)
     }
 }
@@ -148,13 +150,15 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
 
 function handleFormSubmit(e) {
     e.preventDefault();
-    let form = e.currentTarget
-    formValidation(form);
-    form.reset()
+    let form = e.currentTarget;
+    let taskData = cleanFormData(form);
+    form.reset();
     form.closest("dialog").close();
+    addTask(taskData);
+    console.log(taskData)
 }
 
-function formValidation(form) {
+function cleanFormData(form) {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
    
@@ -163,21 +167,41 @@ function formValidation(form) {
     } else {
         data.project = "#general"
     }
+    return data;
+}
 
-    console.log(data)
-}                                           
+function calcRelativeDate(task) {
+    const due = new Date(task.dueDate).toDateString();
+    const today = new Date().toDateString();
+    const tomorrow = new Date(Date.now() + 86400000).toDateString();
 
+    if (due === today) {
+        return "Today"
+    }
+    if (due === tomorrow) {
+        return "Tomorrow"
+    }
 
-
-
-
-function displayTask(task) {
-    new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
+    return null;
 }
 
 
+function localiseTimestamp(task) {
+    let localDate = new Date(task.dueDate).toLocaleDateString(navigator.language, {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+        })
+    return localDate
+}
 
-
+function displayTask(task) {
+    let date = calcRelativeDate(task)
+    if (date === null || date === undefined) {
+        date = localiseTimestamp(task)
+    }
+    new TaskCard(task, date).appendTo(document.querySelector('.tasks-s1'));
+}
 
 
 export {
