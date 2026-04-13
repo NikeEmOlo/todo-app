@@ -129,27 +129,10 @@ function initTabs() {
     });
 
     // SET UP MODAL BUTTONS
-    document.querySelector("#task-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        formValidation(e);
-        document.querySelector("#add-task-modal").close();
-    });
-
-    document.querySelector("#close-task-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-task-modal").close();
-    })
-
-    document.querySelector("#project-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        formValidation(e);
-        document.querySelector("#add-project-modal").close();
-    });
-
-    document.querySelector("#close-project-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-project-modal").close();
-    })
+    document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
+    document.querySelector("#close-task-btn").addEventListener("click", handleFormSubmit);
+    document.querySelector("#project-form").addEventListener("submit", handleFormSubmit);
+    document.querySelector("#close-project-btn").addEventListener("click", handleFormSubmit);
 }
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
@@ -160,6 +143,19 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
 
     sidebarBtn.textContent = config.btnLabel;
     sidebarBtn.onclick = config.onClick;
+}
+
+function handleFormSubmit(e) {
+    e.preventDefault();
+
+    let form = e.currentTarget
+
+    if (e.target.id === "submit-task-btn" || e.target.id === "submit-project-btn") {
+        formValidation(e);
+        form.reset()
+    }
+
+    e.currentTarget.closest("dialog").close();
 }
 
 function formValidation(e) {
