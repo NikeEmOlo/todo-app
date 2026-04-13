@@ -130,9 +130,10 @@ function initTabs() {
 
     // SET UP MODAL BUTTONS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
-    document.querySelector("#close-task-btn").addEventListener("click", handleFormSubmit);
     document.querySelector("#project-form").addEventListener("submit", handleFormSubmit);
-    document.querySelector("#close-project-btn").addEventListener("click", handleFormSubmit);
+
+    document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
+    document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
 }
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
@@ -147,19 +148,14 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
 
 function handleFormSubmit(e) {
     e.preventDefault();
-
     let form = e.currentTarget
-
-    if (e.target.id === "submit-task-btn" || e.target.id === "submit-project-btn") {
-        formValidation(e);
-        form.reset()
-    }
-
-    e.currentTarget.closest("dialog").close();
+    formValidation(form);
+    form.reset()
+    form.closest("dialog").close();
 }
 
-function formValidation(e) {
-    const formData = new FormData(e.currentTarget);
+function formValidation(form) {
+    const formData = new FormData(form);
     const data = Object.fromEntries(formData);
    
     if (data.project) {
@@ -167,7 +163,6 @@ function formValidation(e) {
     } else {
         data.project = "#general"
     }
-
 
     console.log(data)
 }                                           
