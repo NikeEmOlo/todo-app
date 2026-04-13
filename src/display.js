@@ -2,7 +2,7 @@ import "./tasks.css"
 
 let activeTab = "tasks";
 
-// -------CREATING ELEMENTS CLASSES------------//
+// -------CREATING ELEMENTS------------//
 class Element {
     constructor(tag, classNames = [], attributes = {}) {
         this.el = document.createElement(tag);
@@ -87,7 +87,7 @@ class TaskCard extends Div {
     }
 }
 
-//------DISPLAY ELEMENTS ON THE PAGE-----//
+//==============ADD A TASK===========//
 function initTabs() {
     const tabs = {
         tasks: document.querySelector("#tasks-tab"),
@@ -128,7 +128,28 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
-    setupCloseModals()
+    // SET UP MODAL BUTTONS
+    document.querySelector("#task-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        formValidation(e);
+        document.querySelector("#add-task-modal").close();
+    });
+
+    document.querySelector("#close-task-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-task-modal").close();
+    })
+
+    document.querySelector("#project-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        formValidation(e);
+        document.querySelector("#add-project-modal").close();
+    });
+
+    document.querySelector("#close-project-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#add-project-modal").close();
+    })
 }
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
@@ -141,30 +162,18 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
     sidebarBtn.onclick = config.onClick;
 }
 
+function formValidation(e) {
+   const formData = new FormData(e.currentTarget);
+   const data = Object.fromEntries(formData);
+   console.log(data);
+}                                           
+
+
+
+
+
 function displayTask(task) {
     new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
-}
-
-function setupCloseModals() {
-    document.querySelector("#add-task-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-task-modal").close();
-    });
-
-    document.querySelector("#close-task-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-task-modal").close();
-    })
-
-    document.querySelector("#add-project-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-project-modal").close();
-    });
-
-    document.querySelector("#close-project-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector("#add-project-modal").close();
-    })
 }
 
 
