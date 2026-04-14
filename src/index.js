@@ -1,17 +1,12 @@
 import "./index.css"
 import "./tasks.css"
-import {isStorageAvailable} from "./storage.js"
-import { addTask } from "./tasks.js"
+import {isStorageAvailable, loadFromLocal} from "./storage.js"
 import { initTabs } from "./display.js"
 
 
-if (isStorageAvailable("localStorage")) {
-  console.log("Yippee! We can use localStorage awesomeness")
-} else {
-  console.log("Too bad, no localStorage for us")
-}
-
+isStorageAvailable("localStorage")
 initTabs()
+
 
 // addTask('Go to the shop', 'Need to go asap', '11/08/2027', 'Home')
 // addTask('Buy present for ricky', 'TKMAxx', '11/08/2027', 'Gifts')

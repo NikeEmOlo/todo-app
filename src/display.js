@@ -33,6 +33,7 @@ class Input extends Element {
     constructor(classNames = [], attributes = {}) {
         super('input', classNames, attributes);
     }
+
 }
 
 class Label extends Element {
@@ -133,10 +134,10 @@ function initTabs() {
     // SET UP MODAL BUTTONS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
     document.querySelector("#project-form").addEventListener("submit", handleFormSubmit);
-
     document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
 }
+
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
     const config = tabConfig[e.currentTarget.textContent]
@@ -184,7 +185,6 @@ function calcRelativeDate(task) {
 
     return null;
 }
-
 
 function localiseTimestamp(task) {
     let localDate = new Date(task.dueDate).toLocaleDateString(navigator.language, {

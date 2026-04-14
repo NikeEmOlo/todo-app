@@ -1,14 +1,14 @@
-import {saveToLocal} from "./storage.js";
+import {saveToLocal, loadFromLocal} from "./storage.js";
 import { displayTask } from "./display.js";
 
 // // VARIABLES
-let allTasks = []
+let allTasks = loadFromLocal("tasks");
 
 
 function addTask(taskData) {
     const task = new Task(taskData);
     allTasks.push(task);
-    saveToLocal("tasks", allTasks);
+    saveToLocal("tasks", allTasks)
     displayTask(task)
 }
 
@@ -19,6 +19,7 @@ class Task {
         this.dueDate = dueDate;
         this.project = project;
         this.id = crypto.randomUUID();
+        this.complete = false;
     }
 
     deleteTask() {
@@ -44,4 +45,5 @@ class Task {
 
 export {
     addTask,
+    allTasks,
 }
