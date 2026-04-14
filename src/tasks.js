@@ -27,24 +27,8 @@ class Task {
         });
     }
 
-    deleteTask() {
-        //logic to delete a task
-    }
-
-    expandTask() {
-        //logic to expand task and show more detailed view
-    }
-
-    editDueDate() {
-        //logic to edit the due date
-    }
-
-    editProject() {
-        //logic to edit the project it belongs to
-    }
-
-    editDescription() {
-        //logic to allow user to update the description
+    toggleComplete() {
+        this.complete = !this.complete;
     }
 }
 
