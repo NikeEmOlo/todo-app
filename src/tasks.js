@@ -1,12 +1,9 @@
 import {saveToLocal, loadFromLocal} from "./storage.js";
 import { displayElement } from "./display.js";
 
-// // VARIABLES
-let allTasks = loadFromLocal("tasks");
-
 class Task {
-    constructor({task, description, dueDate, project}) {
-        this.title = task;
+    constructor({title, description, dueDate, project}) {
+        this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.project = project;
@@ -36,6 +33,14 @@ function deleteTaskData(taskID) {
     allTasks = allTasks.filter(task => task.id !== taskID);
     saveToLocal("tasks", allTasks)
 }
+
+function buildAllTasks() {
+    return loadFromLocal("tasks").map(data => new Task(data)) || [];
+}
+
+
+//moved to bottom to allow use of Task class
+let allTasks = buildAllTasks();
 
 export {
     addTask,

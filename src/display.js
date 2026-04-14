@@ -147,13 +147,18 @@ function initTabs() {
     });
 
     
-    allTasks.forEach(task => displayElement(task, ".tasks-s1")) //Load existing tasks
+    allTasks.forEach(task => task.complete 
+        ? displayElement(task, ".completed-s1")
+        : displayElement(task, ".tasks-s1"))
+    
 
-    // SET UP MODAL BUTTONS
+
+    // SET UP MODALS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
     document.querySelector("#project-form").addEventListener("submit", handleFormSubmit);
     document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
+    document.querySelector('#due-date').min = new Date().toISOString().slice(0, 10);
 }
 
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
@@ -181,7 +186,6 @@ function handleFormSubmit(e) {
     form.reset();
     form.closest("dialog").close();
     addTask(taskData);
-    console.log(taskData)
 }
 
 function cleanFormData(form) {
