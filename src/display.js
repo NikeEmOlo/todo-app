@@ -131,8 +131,8 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
-    //Load existing tasks
-    // allTasks.forEach(task => new TaskCard(task))
+    
+    allTasks.forEach(task => displayTask(task)) //Load existing tasks
 
     // SET UP MODAL BUTTONS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
@@ -187,7 +187,6 @@ function calcRelativeDate(task) {
 
     return;
 }
-
 
 function displayTask(task) {
     calcRelativeDate(task)
