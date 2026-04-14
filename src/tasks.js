@@ -4,14 +4,6 @@ import { displayTask } from "./display.js";
 // // VARIABLES
 let allTasks = loadFromLocal("tasks");
 
-
-function addTask(taskData) {
-    const task = new Task(taskData);
-    allTasks.push(task);
-    saveToLocal("tasks", allTasks)
-    displayTask(task)
-}
-
 class Task {
     constructor({task, description, dueDate, project}) {
         this.title = task;
@@ -32,7 +24,19 @@ class Task {
     }
 }
 
+function addTask(taskData) {
+    const task = new Task(taskData);
+    allTasks.push(task);
+    saveToLocal("tasks", allTasks)
+    displayTask(task)
+}
+
+function deleteTaskData(taskID) {
+    allTasks = allTasks.filter(task => task.id !== taskID);
+}
+
 export {
     addTask,
     allTasks,
+    deleteTaskData,
 }

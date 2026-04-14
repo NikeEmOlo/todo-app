@@ -1,5 +1,6 @@
 import "./tasks.css"
-import { addTask, allTasks } from "./tasks.js";
+import { addTask, allTasks, deleteTaskData } from "./tasks.js";
+import trashIcon from "./assets/images/icon_trash.svg"
 
 let activeTab = "tasks";
 
@@ -68,14 +69,18 @@ class Text extends Element {
 
 class TaskCard extends Div {
     constructor(task) {
-        super(['task-card'], {'data-id': task.UUID})
+        super(['task-card'], {'data-id': task.id})
 
         this.checkbox = new Input(['checkbox'], {type: 'checkbox'})
-        this.checkbox.el.id = `checkbox-${task.UUID}`
+        this.checkbox.el.id = `checkbox-${task.id}`
         this.append(this.checkbox)
 
-        this.label = new Label(task.title, ['task-label'], {for: `checkbox-${task.UUID}`})
+        this.label = new Label(task.title, ['task-label'], {for: `checkbox-${task.id}`})
         this.append(this.label)
+
+        const deleteIcon = new Element("img", [], {src: trashIcon, alt: "delete", id: "delete-btn-img"})
+        this.deleteButton = new Button(deleteIcon, [], {id: "delete-task-btn"})
+        this.append(this.deleteButton)
 
         this.taskInfoWrapper = new Div(['task-info-wrap'])
         this.append(this.taskInfoWrapper)
@@ -87,10 +92,14 @@ class TaskCard extends Div {
 
         this.timestamp = new Button(new Text('h6', `Due: ${task.displayDate}`, ['muted']), ['tag', 'minimal'])
         this.timestamp.appendTo(this.taskInfoWrapper)
+
+        this.el.addEventListener("click", (e) => taskCardHandler(e, task.id));
     }
+
+
 }
 
-//==============ADD A TASK===========//
+//=======INITIATE FUNCTION======//
 function initTabs() {
     const tabs = {
         tasks: document.querySelector("#tasks-tab"),
@@ -141,7 +150,6 @@ function initTabs() {
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
 }
 
-
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
     const config = tabConfig[e.currentTarget.textContent]
     activeTab = config.active
@@ -152,6 +160,14 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
     sidebarBtn.onclick = config.onClick;
 }
 
+function taskCardHandler(e, taskID) {
+    if (e.target.id === "delete-btn-img") {
+        deleteTaskData(taskID)
+        document.querySelector(`[data-id="${taskID}"]`).remove()
+    }
+}
+
+//=====================PROJECT AND TASK FORMS========================//
 function handleFormSubmit(e) {
     e.preventDefault();
     let form = e.currentTarget;
