@@ -33,6 +33,7 @@ function addTask(taskData) {
 
 function deleteTaskData(taskID) {
     allTasks = allTasks.filter(task => task.id !== taskID);
+    saveToLocal("tasks", allTasks)
 }
 
 export {
