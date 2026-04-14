@@ -1,5 +1,5 @@
 import {saveToLocal, loadFromLocal} from "./storage.js";
-import { displayTask } from "./display.js";
+import { displayElement } from "./display.js";
 
 // // VARIABLES
 let allTasks = loadFromLocal("tasks");
@@ -21,6 +21,7 @@ class Task {
 
     toggleComplete() {
         this.complete = !this.complete;
+        return this.complete
     }
 }
 
@@ -28,7 +29,7 @@ function addTask(taskData) {
     const task = new Task(taskData);
     allTasks.push(task);
     saveToLocal("tasks", allTasks)
-    displayTask(task)
+    displayElement(task, ".tasks-s1")
 }
 
 function deleteTaskData(taskID) {

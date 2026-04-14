@@ -94,6 +94,12 @@ class TaskCard extends Div {
         this.timestamp.appendTo(this.taskInfoWrapper)
 
         this.el.addEventListener("click", (e) => taskCardHandler(e, task.id));
+        this.checkbox.el.addEventListener("change", () => {
+            task.toggleComplete() 
+                ? this.appendTo(document.querySelector(".completed-s1")) 
+                : this.appendTo(document.querySelector(".tasks-s1"))
+        })
+
     }
 
 
@@ -141,7 +147,7 @@ function initTabs() {
     });
 
     
-    allTasks.forEach(task => displayTask(task)) //Load existing tasks
+    allTasks.forEach(task => displayElement(task, ".tasks-s1")) //Load existing tasks
 
     // SET UP MODAL BUTTONS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
@@ -204,13 +210,12 @@ function calcRelativeDate(task) {
     return;
 }
 
-function displayTask(task) {
+function displayElement(task, location) {
     calcRelativeDate(task)
-    new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
+    new TaskCard(task).appendTo(document.querySelector(location));
 }
 
-
 export {
-    displayTask,
+    displayElement,
     initTabs,
 }
