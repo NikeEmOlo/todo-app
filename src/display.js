@@ -1,5 +1,5 @@
 import "./tasks.css"
-import { addTask } from "./tasks.js";
+import { addTask, allTasks } from "./tasks.js";
 
 let activeTab = "tasks";
 
@@ -67,7 +67,7 @@ class Text extends Element {
 }
 
 class TaskCard extends Div {
-    constructor(task, date) {
+    constructor(task) {
         super(['task-card'], {'data-id': task.UUID})
 
         this.checkbox = new Input(['checkbox'], {type: 'checkbox'})
@@ -85,7 +85,7 @@ class TaskCard extends Div {
         this.projectTag.el.textContent = task.project;
         this.projectTag.appendTo(this.taskInfoWrapper)
 
-        this.timestamp = new Button(new Text('h6', `Due: ${date}`, ['muted']), ['tag', 'minimal'])
+        this.timestamp = new Button(new Text('h6', `Due: ${task.displayDate}`, ['muted']), ['tag', 'minimal'])
         this.timestamp.appendTo(this.taskInfoWrapper)
     }
 }
@@ -130,6 +130,9 @@ function initTabs() {
         element.addEventListener("click", (e) => {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
+
+    //Load existing tasks
+    // allTasks.forEach(task => new TaskCard(task))
 
     // SET UP MODAL BUTTONS
     document.querySelector("#task-form").addEventListener("submit", handleFormSubmit);
@@ -177,30 +180,18 @@ function calcRelativeDate(task) {
     const tomorrow = new Date(Date.now() + 86400000).toDateString();
 
     if (due === today) {
-        return "Today"
-    }
-    if (due === tomorrow) {
-        return "Tomorrow"
+        task.displayDate = "Today"
+    } else if (due === tomorrow) {
+        task.displayDate = "Tomorrow"
     }
 
-    return null;
+    return;
 }
 
-function localiseTimestamp(task) {
-    let localDate = new Date(task.dueDate).toLocaleDateString(navigator.language, {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-        })
-    return localDate
-}
 
 function displayTask(task) {
-    let date = calcRelativeDate(task)
-    if (date === null || date === undefined) {
-        date = localiseTimestamp(task)
-    }
-    new TaskCard(task, date).appendTo(document.querySelector('.tasks-s1'));
+    calcRelativeDate(task)
+    new TaskCard(task).appendTo(document.querySelector('.tasks-s1'));
 }
 
 

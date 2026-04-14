@@ -20,6 +20,11 @@ class Task {
         this.project = project;
         this.id = crypto.randomUUID();
         this.complete = false;
+        this.displayDate = new Date(dueDate).toLocaleDateString(navigator.language, {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
     }
 
     deleteTask() {

@@ -3,7 +3,6 @@ import "./tasks.css"
 import {isStorageAvailable, loadFromLocal} from "./storage.js"
 import { initTabs } from "./display.js"
 
-
 isStorageAvailable("localStorage")
 initTabs()
 
