@@ -101,7 +101,7 @@ class TaskCard extends Div {
         this.append(this.titleContainer, this.description, this.taskInfoWrapper)
 
         //------Event listeners------//
-        this.el.addEventListener("click", (e) => taskCardHandler(e, task.id, this.description.el));
+        this.el.addEventListener("click", (e) => taskCardHandler(e, this));
         this.checkbox.el.addEventListener("change", () => {
             task.toggleComplete() 
                 ? this.appendTo(document.querySelector(".completed-s1")) 
@@ -179,20 +179,23 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
     sidebarBtn.onclick = config.onClick;
 }
 
-function taskCardHandler(e, taskID, description) {
+function taskCardHandler(e, taskCard) {
     const el = e.target
 
     // delete
     if (el.classList.contains("delete-btn-img")) {
+        const taskID = taskCard.dataset.id
+
         deleteTaskData(taskID)
-        document.querySelector(`[data-id="${taskID}"]`).remove()
+        taskCard.remove()
         return
     }
 
     // expand
     const expandWrapper = el.closest(".expand-wrapper")
-
     if (expandWrapper) {
+        const description = taskCard.description.el
+
         const isOpen = expandWrapper.classList.toggle("open")
         description.hidden = !isOpen
     }
