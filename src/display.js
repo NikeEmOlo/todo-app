@@ -185,7 +185,6 @@ function taskCardHandler(e, taskCard) {
     // delete
     if (el.classList.contains("delete-btn-img")) {
         const taskID = taskCard.dataset.id
-
         deleteTaskData(taskID)
         taskCard.remove()
         return
@@ -195,8 +194,14 @@ function taskCardHandler(e, taskCard) {
     const expandWrapper = el.closest(".expand-wrapper")
     if (expandWrapper) {
         const description = taskCard.description.el
-
         const isOpen = expandWrapper.classList.toggle("open")
+        if (isOpen) {
+            taskCard.expandBtn.el.textContent = "See less"
+            taskCard.expandIcon.el.src = upCaret
+        } else {
+            taskCard.expandBtn.el.textContent = "See more"
+            taskCard.expandIcon.el.src = downCaret
+        }
         description.hidden = !isOpen
     }
 }
