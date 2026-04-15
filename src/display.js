@@ -184,9 +184,9 @@ function taskCardHandler(e, taskCard) {
 
     // delete
     if (el.classList.contains("delete-btn-img")) {
-        const taskID = taskCard.dataset.id
+        const taskID = taskCard.el.dataset.id
         deleteTaskData(taskID)
-        taskCard.remove()
+        taskCard.el.remove()
         return
     }
 
