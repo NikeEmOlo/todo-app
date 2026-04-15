@@ -137,7 +137,7 @@ a {
 .sidebar {
     background-color: var(--sidebar-color);
     padding: 1.5rem 2rem;
-    max-height: 100vh;
+    height: 100vh;
     overflow-y: auto;
     position: sticky;
     top: 0;
@@ -145,8 +145,8 @@ a {
 
 .main {
     background-color: var(--main-bg-color);
-    padding: 1.5rem;
-    overflow-y: hidden;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    overflow-y: auto;
     height: 100vh;
 }
 
@@ -163,7 +163,11 @@ a {
     z-index: 10;
 }
 /* ------TAB HEADER */
-.main .header { 
+.main .header {
+    flex: 0 0 4rem;
+    height: 4rem;
+    padding-top: 1.5rem;
+    background-color: var(--main-bg-color);
 
     .logo {
         margin-right: clamp(20px, 6.75vw, 6.75rem);
@@ -205,26 +209,29 @@ a {
 .tab {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
-    overflow: hidden;
-    min-height: 0;
     padding: 0 4rem;
 }
 
 .tab-title {
     display: flex;
     flex-direction: column;
-    width: 80%;
+    position: sticky;
+    top: 4rem;
+    background-color: var(--main-bg-color);
+    z-index: 5;
+    padding-bottom: 2rem;
 
     h1 {
         font-size: 3.75rem;
         font-weight: 400;
         margin-top: 3rem;
+        width: 80%;
     }
 
     p {
         font-size: 1.125rem;
         font-weight: 300;
+        width: 80%;
     }
 }
 /* ------SIDEBAR SPECIFIC */
@@ -258,6 +265,7 @@ a {
 }
 
 #sb-content {
+    flex: 1;
     align-items: center;
     justify-content: flex-end;
     padding: 0;

@@ -190,7 +190,7 @@ function taskCardHandler(e, taskCard) {
         return
     }
 
-    // expand
+    // expand description
     const expandWrapper = el.closest(".expand-wrapper")
     if (expandWrapper) {
         const description = taskCard.description.el
