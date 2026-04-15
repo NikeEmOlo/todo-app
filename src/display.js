@@ -1,6 +1,8 @@
 import "./tasks.css"
 import { addTask, allTasks, deleteTaskData } from "./tasks.js";
-import trashIcon from "./assets/images/icon_trash.svg"
+import trashIcon from "./assets/images/icon_trash.svg";
+import downCaret from "./assets/images/icon_caret_down.svg"
+import upCaret from "./assets/images/icon_caret_up.svg";
 
 let activeTab = "tasks";
 
@@ -12,8 +14,8 @@ class Element {
         Object.entries(attributes).forEach(([key, value]) => this.el.setAttribute(key, value));
     }
 
-    append(child){
-        this.el.append(child.el)
+    append(...children){
+        children.forEach(child => this.el.append(child.el))
         return this
     }
 
@@ -71,35 +73,40 @@ class TaskCard extends Div {
     constructor(task) {
         super(['task-card'], {'data-id': task.id})
 
+        //------title container (checkbox, title, expand button)------//
+        this.titleContainer = new Div(['title-container'])
         this.checkbox = new Input(['checkbox'], {type: 'checkbox'})
         this.checkbox.el.id = `checkbox-${task.id}`
-        this.append(this.checkbox)
-
         this.label = new Label(task.title, ['task-label'], {for: `checkbox-${task.id}`})
-        this.append(this.label)
+        this.expandBtnWrapper = new Div(['expand-wrapper'])
+        this.expandBtn = new Button("See more", ["expand-btn", "muted"], {})
+        this.expandIcon = new Element("img", ["expand-icon"], {src: downCaret})
+        this.expandBtnWrapper.append(this.expandBtn, this.expandIcon)
+        this.titleContainer.append(this.checkbox, this.label, this.expandBtnWrapper)
 
-        const deleteIcon = new Element("img", [], {src: trashIcon, alt: "delete", id: "delete-btn-img"})
-        this.deleteButton = new Button(deleteIcon, [], {id: "delete-task-btn"})
-        this.append(this.deleteButton)
+        //------description container------//
+        this.description = new Text("p", task.description, ["description"], {hidden: true})
 
+        //------task info wrapper (project tag, timestamp, trash button)------//
         this.taskInfoWrapper = new Div(['task-info-wrap'])
-        this.append(this.taskInfoWrapper)
-
-        //append the following to taskInfoWrap
         this.projectTag = new Div(['tag'])
         this.projectTag.el.textContent = task.project;
-        this.projectTag.appendTo(this.taskInfoWrapper)
-
         this.timestamp = new Button(new Text('h6', `Due: ${task.displayDate}`, ['muted']), ['tag', 'minimal'])
-        this.timestamp.appendTo(this.taskInfoWrapper)
+        this.deleteIcon = new Element("img", ["delete-btn-img"], {src: trashIcon, alt: "delete"})
+        this.deleteButton = new Button(this.deleteIcon, [], {id: "delete-task-btn"})
+        this.deleteButton.append(this.deleteIcon)
+        this.taskInfoWrapper.append(this.projectTag, this.timestamp, this.deleteButton)
 
-        this.el.addEventListener("click", (e) => taskCardHandler(e, task.id));
+        //------APPEND TO TASK CARD------//
+        this.append(this.titleContainer, this.description, this.taskInfoWrapper)
+
+        //------Event listeners------//
+        this.el.addEventListener("click", (e) => taskCardHandler(e, task.id, this.description.el));
         this.checkbox.el.addEventListener("change", () => {
             task.toggleComplete() 
                 ? this.appendTo(document.querySelector(".completed-s1")) 
                 : this.appendTo(document.querySelector(".tasks-s1"))
         })
-
     }
 
 
@@ -161,6 +168,7 @@ function initTabs() {
     document.querySelector('#due-date').min = new Date().toISOString().slice(0, 10);
 }
 
+//=======USER ACTION HANDLERS=====//
 function tabController(e, tabs, sidebarBtn, tabConfig) { 
     const config = tabConfig[e.currentTarget.textContent]
     activeTab = config.active
@@ -171,10 +179,22 @@ function tabController(e, tabs, sidebarBtn, tabConfig) {
     sidebarBtn.onclick = config.onClick;
 }
 
-function taskCardHandler(e, taskID) {
-    if (e.target.id === "delete-btn-img") {
+function taskCardHandler(e, taskID, description) {
+    const el = e.target
+
+    // delete
+    if (el.classList.contains("delete-btn-img")) {
         deleteTaskData(taskID)
         document.querySelector(`[data-id="${taskID}"]`).remove()
+        return
+    }
+
+    // expand
+    const expandWrapper = el.closest(".expand-wrapper")
+
+    if (expandWrapper) {
+        const isOpen = expandWrapper.classList.toggle("open")
+        description.hidden = !isOpen
     }
 }
 
