@@ -40,18 +40,27 @@ function buildAllTasks() {
 
 function getProjects() {
     let taskList = buildAllTasks()
+    let projectList;
     const tasksPerProject = taskList.reduce((projectCount, task) => {
         projectCount[task.project] = (projectCount[task.project] || 0) + 1;
         return projectCount;
     }, {});
-    return Object.fromEntries(
+
+    const sortAlphabetical = Object.fromEntries(
         Object.entries(tasksPerProject).sort(([a], [b]) => a.localeCompare(b))
     );
+
+    //new projects should be pushed to permanent storage
+    //storage should not update when projects are deleted
+
+
+    return sortAlphabetical
 }
 
 
 //moved to bottom to allow use of Task class
 let allTasks = buildAllTasks();
+let allProjects = loadFromLocal("projects");
 
 export {
     addTask,

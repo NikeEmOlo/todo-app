@@ -267,7 +267,6 @@ function loadSidebar() {
     
     if (Object.keys(projects).length > 0) {
         Object.entries(projects).forEach(([project, count]) => {
-        console.log(project, count);
         const wrapper = new Div(["sb-txt-wrap"])
         const projectName = new Text("h5", `${project}`, ["project-name"])
         const projectCount = new Text("h5", `${count}`, ["project-count"])
