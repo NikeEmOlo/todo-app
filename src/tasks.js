@@ -38,6 +38,17 @@ function buildAllTasks() {
     return loadFromLocal("tasks").map(data => new Task(data)) || [];
 }
 
+function getProjects() {
+    let taskList = buildAllTasks()
+    const tasksPerProject = taskList.reduce((projectCount, task) => {
+        projectCount[task.project] = (projectCount[task.project] || 0) + 1;
+        return projectCount;
+    }, {});
+    return Object.fromEntries(
+        Object.entries(tasksPerProject).sort(([a], [b]) => a.localeCompare(b))
+    );
+}
+
 
 //moved to bottom to allow use of Task class
 let allTasks = buildAllTasks();
@@ -46,4 +57,6 @@ export {
     addTask,
     allTasks,
     deleteTaskData,
+    getProjects,
+    buildAllTasks,
 }

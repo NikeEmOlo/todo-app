@@ -1,5 +1,5 @@
 import "./tasks.css"
-import { addTask, allTasks, deleteTaskData } from "./tasks.js";
+import { addTask, allTasks, deleteTaskData, getProjects, buildAllTasks, } from "./tasks.js";
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
 import upCaret from "./assets/images/icon_caret_up.svg";
@@ -114,6 +114,7 @@ class TaskCard extends Div {
 
 //=======INITIATE FUNCTION======//
 function initTabs() {
+    //======variables======//
     const tabs = {
         tasks: document.querySelector("#tasks-tab"),
         projects: document.querySelector("#projects-tab"),
@@ -144,6 +145,7 @@ function initTabs() {
         },
     }
 
+    //===========load initial display=============//
     Object.values(tabs).forEach(tab => tab.style.display = "none")
     tabs.tasks.style.display = "flex";
     sidebarBtn.onclick = tabConfig.Tasks.onClick;
@@ -153,7 +155,8 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
-    
+    loadSidebar();
+
     allTasks.forEach(task => task.complete 
         ? displayElement(task, ".completed-s1")
         : displayElement(task, ".tasks-s1"))
@@ -187,6 +190,7 @@ function taskCardHandler(e, taskCard) {
         const taskID = taskCard.el.dataset.id
         deleteTaskData(taskID)
         taskCard.el.remove()
+        loadSidebar()
         return
     }
 
@@ -214,6 +218,7 @@ function handleFormSubmit(e) {
     form.reset();
     form.closest("dialog").close();
     addTask(taskData);
+    loadSidebar()
 }
 
 function cleanFormData(form) {
@@ -228,6 +233,7 @@ function cleanFormData(form) {
     return data;
 }
 
+//=====================Task card display================================//
 function calcRelativeDate(task) {
     const due = new Date(task.dueDate).toDateString();
     const today = new Date().toDateString();
@@ -245,6 +251,35 @@ function calcRelativeDate(task) {
 function displayElement(task, location) {
     calcRelativeDate(task)
     new TaskCard(task).appendTo(document.querySelector(location));
+}
+
+//====================Sidebar display=======================================//
+function loadSidebar() {
+    let projects = getProjects()
+    const projectsInSidebar = document.querySelectorAll(".sb-txt-wrap")
+    const sidebarContent = document.querySelector("#sb-content")
+    const sidebarBtn = document.querySelector(".sb-button")
+
+    //clear sidebar
+    projectsInSidebar.forEach(wrapper => {
+            wrapper.remove()
+        })
+    
+    if (Object.keys(projects).length > 0) {
+        Object.entries(projects).forEach(([project, count]) => {
+        console.log(project, count);
+        const wrapper = new Div(["sb-txt-wrap"])
+        const projectName = new Text("h5", `${project}`, ["project-name"])
+        const projectCount = new Text("h5", `${count}`, ["project-count"])
+        wrapper.el.append(projectName.el, projectCount.el)
+        sidebarContent.insertBefore(wrapper.el, sidebarBtn)
+        })
+    } else {
+        const wrapper = new Div(["sb-txt-wrap"])
+        const startAProject = new Text("h5", "No projects", ["project-name"])
+        wrapper.el.append(startAProject.el)
+        sidebarContent.insertBefore(wrapper.el, sidebarBtn)
+    }
 }
 
 export {
