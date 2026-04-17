@@ -112,6 +112,16 @@ class TaskCard extends Div {
 
 }
 
+class ProjectCard extends Div {
+    constructor(project, count) {
+        super(['project-card'], {'data-id': project})
+
+        this.title = new Text("h2", project, ["project-card-title"])
+        this.taskCount = new Text("h3", count, ["project-card-count"])
+        this.append(this.title, this.taskCount)
+    }
+}
+
 //=======INITIATE FUNCTION======//
 function initTabs() {
     //======variables======//
@@ -158,6 +168,7 @@ function initTabs() {
     });
 
     loadSidebar();
+    loadProjectsTab();
 
     allTasks.forEach(task => task.complete 
         ? displayElement(task, ".completed-s1")
@@ -236,7 +247,7 @@ function cleanFormData(form) {
     const data = Object.fromEntries(formData);
    
     if (data.project) {
-        data.project = "#" + data.project.toLowerCase().split(" ").join("-");
+        data.project = "#" + data.project.replace(/^#+/, "").toLowerCase().split(" ").join("-");
     } else {
         data.project = "#general"
     }
@@ -289,6 +300,16 @@ function loadSidebar() {
         wrapper.el.append(startAProject.el)
         sidebarContent.insertBefore(wrapper.el, sidebarBtn)
     }
+}
+
+function loadProjectsTab() {
+    let projects = getProjects()
+    let projectsTab = document.querySelector("#projects-tab")
+
+    Object.entries(projects).forEach(([project, count]) => {
+        let projectCard = new ProjectCard(project, count);
+        projectsTab.append(projectCard.el)
+    })
 }
 
 function setProjectOptions() {

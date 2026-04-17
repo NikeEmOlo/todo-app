@@ -234,7 +234,7 @@ a {
         width: 80%;
     }
 }
-/* ------SIDEBAR SPECIFIC */
+/*--------------------------SIDEBAR --------------------- */
 #sb-header {
     display: flex;
     align-items: center;
@@ -269,18 +269,32 @@ a {
     align-items: center;
     justify-content: flex-end;
     padding: 0;
-    margin-top: 2rem;
+    margin-top: 3rem;
 
     .sb-txt-wrap {
         display:flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        width: 65%;
+        gap: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .project-name, .project-count {
+        font-size: 1rem;
+        font-variant: normal;
+        font-weight: 400;
+    }
+
+    .project-count {
+        font-size: 0.75rem;
     }
 
     .sb-button {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: auto;
         gap: .5rem;
         min-height: 2.5rem;
         width: clamp(150px, 80%, 250px);
@@ -290,7 +304,7 @@ a {
         color: var(--bright-white);
         font-size: 1rem;
         font-weight: 500;
-        transition: all 0.1s ease-in
+        transition: all 0.1s ease-in;
     }
 
     .sb-button::before {

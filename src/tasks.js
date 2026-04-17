@@ -43,15 +43,6 @@ function deleteTaskData(taskID) {
     saveToLocal("tasks", allTasks)
 }
 
-function deleteProject() {
-    //check if the project has active tasks in it
-    //if it does, alert a warning "Are you sure you want to delete this project? All incomplete tasks will be lost"
-    //Yes = delete all tasks with that project tag && remove the project from allProjects and update localStorage
-    //No = cancel/do nothing
-
-    
-}
-
 function buildAllTasks() {
     return loadFromLocal("tasks").map(data => new Task(data)) || [];
 }
@@ -75,7 +66,7 @@ function getProjects() {
             emptyProjects.push(project)
         }
     })
-    emptyProjects.sort((a, b) => a - b)
+    emptyProjects.sort((a, b) => a.localeCompare(b))
     emptyProjects.forEach((project) => {
         sortAlphabetical[project] = 0
     })
