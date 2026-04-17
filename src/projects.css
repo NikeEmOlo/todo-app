@@ -1,0 +1,35 @@
+.edit-projects-btn {
+    margin-top: -2rem;
+    background-color: var(--main-bg-color);
+    border: none;
+    text-align: right;
+    padding: 0 1rem;
+
+}
+
+#projects-s1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+
+    .project-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1 1 calc(33% - 0.75rem);
+        min-width: 200px;
+        height: 200px;
+        padding: 32px;
+        border-radius: 1rem;
+        background-color: var(--bright-white);
+    }
+
+    .project-card-title {
+        font-size: clamp(1.25rem, 2vw, 2rem);
+    }
+
+    .project-card-count {
+        font-size: clamp(1.25rem, 1.5vw, 2rem);
+        width: fit-content;
+    }
+}

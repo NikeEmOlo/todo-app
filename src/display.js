@@ -1,5 +1,6 @@
 import "./tasks.css"
-import { addTask, addProject, allTasks, deleteTaskData, getProjects, } from "./tasks.js";
+import "./projects.css"
+import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject} from "./tasks.js";
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
 import upCaret from "./assets/images/icon_caret_up.svg";
@@ -116,9 +117,16 @@ class ProjectCard extends Div {
     constructor(project, count) {
         super(['project-card'], {'data-id': project})
 
-        this.title = new Text("h2", project, ["project-card-title"])
-        this.taskCount = new Text("h3", count, ["project-card-count"])
-        this.append(this.title, this.taskCount)
+        this.title = new Text("h2", project, ["project-card-title", "lighter-txt"])
+        this.taskCount = new Text("h2", count, ["project-card-count", "lighter-txt"])
+        this.deleteIcon = new Element("img", ["delete-btn-img"], {src: trashIcon, alt: "delete"})
+        this.deleteProjectBtn = new Button(this.deleteIcon, ["delete-project-btn"], {},)
+        this.deleteProjectBtn.el.style.display = "none"
+        
+        this.deleteProjectBtn.append(this.deleteIcon)
+        this.append(this.title, this.taskCount, this.deleteProjectBtn)
+
+        this.el.addEventListener("click", projectCardHandler)
     }
 }
 
@@ -182,6 +190,7 @@ function initTabs() {
     document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector('#due-date').min = new Date().toISOString().slice(0, 10);
+    document.querySelector(".edit-projects-btn").addEventListener("click", editProjects)
     setProjectOptions()
 }
 
@@ -240,6 +249,7 @@ function handleFormSubmit(e) {
     
     loadSidebar()
     setProjectOptions()
+    loadProjectsTab()
 }
 
 function cleanFormData(form) {
@@ -288,11 +298,11 @@ function loadSidebar() {
     
     if (Object.keys(projects).length > 0) {
         Object.entries(projects).forEach(([project, count]) => {
-        const wrapper = new Div(["sb-txt-wrap"])
-        const projectName = new Text("h5", `${project}`, ["project-name"])
-        const projectCount = new Text("h5", `${count}`, ["project-count"])
-        wrapper.el.append(projectName.el, projectCount.el)
-        sidebarContent.insertBefore(wrapper.el, sidebarBtn)
+            const wrapper = new Div(["sb-txt-wrap"])
+            const projectName = new Text("h5", `${project}`, ["project-name"])
+            const projectCount = new Text("h5", `${count}`, ["project-count"])
+            wrapper.el.append(projectName.el, projectCount.el)
+            sidebarContent.insertBefore(wrapper.el, sidebarBtn)
         })
     } else {
         const wrapper = new Div(["sb-txt-wrap"])
@@ -303,13 +313,19 @@ function loadSidebar() {
 }
 
 function loadProjectsTab() {
-    let projects = getProjects()
-    let projectsTab = document.querySelector("#projects-tab")
-
+    const projects = getProjects()
+    const projectsContainer = document.querySelector("#projects-s1")
+    const editProjectsBtn = document.querySelector(".edit-projects-btn")
+    projectsContainer.replaceChildren()
     Object.entries(projects).forEach(([project, count]) => {
         let projectCard = new ProjectCard(project, count);
-        projectsTab.append(projectCard.el)
+        projectsContainer.append(projectCard.el)
     })
+    if (Object.keys(projects).length === 0) {
+        editProjectsBtn.textContent = "No projects to edit"
+    } else if (editProjectsBtn.textContent.toLowerCase() === "no projects to edit") {
+        editProjectsBtn.textContent = "Edit Projects"
+    }
 }
 
 function setProjectOptions() {
@@ -321,6 +337,33 @@ function setProjectOptions() {
         const option = new Element("option", [], {value: `${noHashtag}`})
         projectFormField.append(option.el)
     })
+}
+
+function editProjects() {
+    const deleteProjectBtns = document.querySelectorAll(".delete-project-btn")
+    const editProjectsBtn = document.querySelector(".edit-projects-btn")
+
+    if (editProjectsBtn.textContent.toLowerCase() === "edit projects") {
+        deleteProjectBtns.forEach((button) => button.style.display = "flex")
+        editProjectsBtn.textContent = "Stop editing"
+    } else {
+        deleteProjectBtns.forEach((button) => button.style.display = "none")
+        editProjectsBtn.textContent = "Edit Projects"
+    }
+}
+
+function projectCardHandler(e) {
+    if (e.target.closest(".delete-project-btn")) {
+        deleteProject(e)
+    }
+
+    loadSidebar()
+    loadProjectsTab()
+
+    const editProjectsBtn = document.querySelector(".edit-projects-btn")
+    if (editProjectsBtn.textContent.toLowerCase() === "stop editing") {
+        document.querySelectorAll(".delete-project-btn").forEach(btn => btn.style.display = "flex")
+    }
 }
 
 export {

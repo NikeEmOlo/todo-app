@@ -43,6 +43,30 @@ function deleteTaskData(taskID) {
     saveToLocal("tasks", allTasks)
 }
 
+function deleteProject(e) {
+    let projects = getProjects()
+    let projectID = e.target.closest(".project-card").dataset.id
+
+    let removeAllTasks = () => {
+        allTasks = allTasks.filter(task => task.project !== projectID)
+        saveToLocal("tasks", allTasks)
+    }
+
+    let removeProject = () => {
+        allProjects = allProjects.filter(project => project !== projectID)
+        saveToLocal("projects", allProjects)
+    }
+    
+    if (projects[projectID] > 0) {
+        if(confirm("This project still has tasks assigned to it. If you continue, all tasks in the project will be deleted. Are you sure you want to delete this project?")){
+            removeAllTasks()
+            removeProject()
+        }
+    } else {
+        removeProject()
+    }
+}
+
 function buildAllTasks() {
     return loadFromLocal("tasks").map(data => new Task(data)) || [];
 }
@@ -83,6 +107,7 @@ export {
     allTasks,
     addProject,
     deleteTaskData,
+    deleteProject,
     getProjects,
     buildAllTasks,
 }
