@@ -25,7 +25,12 @@ class Task {
 function addTask(taskData) {
     const task = new Task(taskData);
     allTasks.push(task);
+    
+    if (!allProjects.includes(task.project)) {
+        allProjects.push(task.project)
+    }
     saveToLocal("tasks", allTasks)
+    saveToLocal("projects", allProjects)
     displayElement(task, ".tasks-s1")
 }
 
@@ -39,8 +44,9 @@ function buildAllTasks() {
 }
 
 function getProjects() {
+    let projects = loadFromLocal("projects")
     let taskList = buildAllTasks()
-    let projectList;
+
     const tasksPerProject = taskList.reduce((projectCount, task) => {
         projectCount[task.project] = (projectCount[task.project] || 0) + 1;
         return projectCount;
@@ -50,17 +56,23 @@ function getProjects() {
         Object.entries(tasksPerProject).sort(([a], [b]) => a.localeCompare(b))
     );
 
-    //new projects should be pushed to permanent storage
-    //storage should not update when projects are deleted
-
+    let emptyProjects = [];
+    projects.forEach(project => {
+        if (!(project in sortAlphabetical)) {
+            emptyProjects.push(project)
+        }
+    })
+    emptyProjects.sort((a, b) => a - b)
+    emptyProjects.forEach((project) => {
+        sortAlphabetical[project] = 0
+    })
 
     return sortAlphabetical
-}
-
+}   
 
 //moved to bottom to allow use of Task class
 let allTasks = buildAllTasks();
-let allProjects = loadFromLocal("projects");
+let allProjects = loadFromLocal("projects") || []
 
 export {
     addTask,
