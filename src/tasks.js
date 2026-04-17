@@ -27,16 +27,29 @@ function addTask(taskData) {
     allTasks.push(task);
     
     if (!allProjects.includes(task.project)) {
-        allProjects.push(task.project)
+        addProject(task.project)
     }
     saveToLocal("tasks", allTasks)
-    saveToLocal("projects", allProjects)
     displayElement(task, ".tasks-s1")
+}
+
+function addProject(projectName) {
+    allProjects.push(projectName)
+    saveToLocal("projects", allProjects)
 }
 
 function deleteTaskData(taskID) {
     allTasks = allTasks.filter(task => task.id !== taskID);
     saveToLocal("tasks", allTasks)
+}
+
+function deleteProject() {
+    //check if the project has active tasks in it
+    //if it does, alert a warning "Are you sure you want to delete this project? All incomplete tasks will be lost"
+    //Yes = delete all tasks with that project tag && remove the project from allProjects and update localStorage
+    //No = cancel/do nothing
+
+    
 }
 
 function buildAllTasks() {
@@ -77,6 +90,7 @@ let allProjects = loadFromLocal("projects") || []
 export {
     addTask,
     allTasks,
+    addProject,
     deleteTaskData,
     getProjects,
     buildAllTasks,

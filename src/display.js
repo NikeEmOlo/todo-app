@@ -1,5 +1,5 @@
 import "./tasks.css"
-import { addTask, allTasks, deleteTaskData, getProjects, buildAllTasks, } from "./tasks.js";
+import { addTask, addProject, allTasks, deleteTaskData, getProjects, } from "./tasks.js";
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
 import upCaret from "./assets/images/icon_caret_up.svg";
@@ -141,7 +141,9 @@ function initTabs() {
             active: "completed",
             tab: "#completed-tab",
             btnLabel: "Add Task",
-            onClick: () => document.querySelector("#add-task-modal").showModal(),
+            onClick: () => {
+                document.querySelector("#add-task-modal").showModal();
+            },
         },
     }
 
@@ -169,6 +171,7 @@ function initTabs() {
     document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector('#due-date').min = new Date().toISOString().slice(0, 10);
+    setProjectOptions()
 }
 
 //=======USER ACTION HANDLERS=====//
@@ -217,8 +220,15 @@ function handleFormSubmit(e) {
     let taskData = cleanFormData(form);
     form.reset();
     form.closest("dialog").close();
-    addTask(taskData);
+
+    if (form === document.querySelector("#project-form")) {
+        addProject(taskData.project)
+    } else {
+        addTask(taskData);   
+    }
+    
     loadSidebar()
+    setProjectOptions()
 }
 
 function cleanFormData(form) {
@@ -253,7 +263,7 @@ function displayElement(task, location) {
     new TaskCard(task).appendTo(document.querySelector(location));
 }
 
-//====================Sidebar display=======================================//
+//====================Projects display=======================================//
 function loadSidebar() {
     let projects = getProjects()
     const projectsInSidebar = document.querySelectorAll(".sb-txt-wrap")
@@ -279,6 +289,17 @@ function loadSidebar() {
         wrapper.el.append(startAProject.el)
         sidebarContent.insertBefore(wrapper.el, sidebarBtn)
     }
+}
+
+function setProjectOptions() {
+    let projects = getProjects()
+    let projectFormField = document.querySelector("#project-field-list")
+    projectFormField.replaceChildren()
+    Object.keys(projects).forEach((project) => {
+        let noHashtag = project.slice(1)
+        const option = new Element("option", [], {value: `${noHashtag}`})
+        projectFormField.append(option.el)
+    })
 }
 
 export {
