@@ -278,6 +278,14 @@ a {
         width: 65%;
         gap: 2rem;
         margin-bottom: 1rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.15s ease;
+        cursor: pointer;
+    }
+
+    .sb-txt-wrap:hover {
+        background-color: white;
     }
 
     .project-name, .project-count {

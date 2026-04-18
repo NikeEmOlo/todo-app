@@ -136,7 +136,9 @@ class ProjectCard extends Div {
         this.deleteProjectBtn.el.style.display = "none"
         
         this.deleteProjectBtn.append(this.deleteIcon)
-        this.append(this.title, this.taskCount, this.deleteProjectBtn)
+        this.bottomRow = new Div(["project-card-bottom"])
+        this.bottomRow.append(this.taskCount, this.deleteProjectBtn)
+        this.append(this.title, this.bottomRow)
 
         this.el.addEventListener("click", projectCardHandler)
     }
