@@ -1,6 +1,18 @@
 import "./tasks.css"
 import "./projects.css"
-import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject} from "./tasks.js";
+import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject, getProjectColor, hasProjectColor, setProjectColor } from "./tasks.js";
+
+const palette = [
+    "#001F40", "#003380", "#0055CC", "#007AFF", "#3395FF", "#66B0FF",
+    "#001A1F", "#003340", "#006675", "#009AB0", "#00E5FF", "#33EAFF",
+    "#1A0A1C", "#3D1A45", "#6D2280", "#A758B1", "#BC7DC4", "#D0A3D8",
+    "#001519", "#002B33", "#00404D", "#006875", "#009AB0", "#00CCDD",
+    "#1A1A1A", "#333333", "#666666", "#999999",
+]
+
+function randomColor() {
+    return palette[Math.floor(Math.random() * palette.length)]
+}
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
 import upCaret from "./assets/images/icon_caret_up.svg";
@@ -175,6 +187,9 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
+    Object.keys(getProjects()).forEach(project => {
+        if (!hasProjectColor(project)) setProjectColor(project, randomColor())
+    })
     loadSidebar();
     loadProjectsTab();
 
@@ -243,8 +258,11 @@ function handleFormSubmit(e) {
 
     if (form === document.querySelector("#project-form")) {
         addProject(taskData.project)
+        setProjectColor(taskData.project, randomColor())
     } else {
-        addTask(taskData);   
+        const isNewProject = !Object.keys(getProjects()).includes(taskData.project)
+        addTask(taskData)
+        if (isNewProject) setProjectColor(taskData.project, randomColor())
     }
     
     loadSidebar()
@@ -300,6 +318,7 @@ function loadSidebar() {
         Object.entries(projects).forEach(([project, count]) => {
             const wrapper = new Div(["sb-txt-wrap"])
             const projectName = new Text("h5", `${project}`, ["project-name"])
+            projectName.el.style.color = getProjectColor(project)
             const projectCount = new Text("h5", `${count}`, ["project-count"])
             wrapper.el.append(projectName.el, projectCount.el)
             sidebarContent.insertBefore(wrapper.el, sidebarBtn)
@@ -319,6 +338,7 @@ function loadProjectsTab() {
     projectsContainer.replaceChildren()
     Object.entries(projects).forEach(([project, count]) => {
         let projectCard = new ProjectCard(project, count);
+        projectCard.title.el.style.color = getProjectColor(project)
         projectsContainer.append(projectCard.el)
     })
     if (Object.keys(projects).length === 0) {

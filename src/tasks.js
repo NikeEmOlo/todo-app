@@ -33,9 +33,25 @@ function addTask(taskData) {
     displayElement(task, ".tasks-s1")
 }
 
+const _storedColors = loadFromLocal("projectColors")
+let projectColors = Array.isArray(_storedColors) ? {} : (_storedColors || {})
+
 function addProject(projectName) {
     allProjects.push(projectName)
     saveToLocal("projects", allProjects)
+}
+
+function setProjectColor(projectName, color) {
+    projectColors[projectName] = color
+    saveToLocal("projectColors", projectColors)
+}
+
+function getProjectColor(projectName) {
+    return projectColors[projectName] || "#999999"
+}
+
+function hasProjectColor(projectName) {
+    return projectName in projectColors
 }
 
 function deleteTaskData(taskID) {
@@ -109,5 +125,8 @@ export {
     deleteTaskData,
     deleteProject,
     getProjects,
+    getProjectColor,
+    hasProjectColor,
+    setProjectColor,
     buildAllTasks,
 }

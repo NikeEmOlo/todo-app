@@ -109,7 +109,7 @@
 
 /* ------SECTION 2 (UPCOMING) */
 .tasks-s2 {
-    display: flex;
+    display: none;
     flex-direction: column;
     width: clamp(300px, 80%, 960px);
     min-height: 10rem;

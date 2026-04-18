@@ -32,4 +32,24 @@
         font-size: clamp(1.25rem, 1.5vw, 2rem);
         width: fit-content;
     }
+
+    .delete-project-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        margin-left: auto;
+
+        .delete-btn-img {
+            width: 18px;
+            height: auto;
+            filter: saturate(0%) grayscale(100%) opacity(55%);
+        }
+
+        &:hover .delete-btn-img {
+            filter: none;
+        }
+    }
 }
