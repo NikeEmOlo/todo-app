@@ -47,6 +47,7 @@ function setProjectColor(projectName, color) {
 }
 
 function getProjectColor(projectName) {
+    if (projectName === "#general") return "#999999"
     return projectColors[projectName] || "#999999"
 }
 
@@ -102,7 +103,7 @@ function getProjects() {
     let taskList = buildAllTasks()
 
     const tasksPerProject = taskList.reduce((projectCount, task) => {
-        projectCount[task.project] = (projectCount[task.project] || 0) + 1;
+        if (!task.complete) projectCount[task.project] = (projectCount[task.project] || 0) + 1;
         return projectCount;
     }, {});
 

@@ -66,6 +66,15 @@ p, h1, h2, h3, h4, h5, h6 {
     max-width: fit-content;
 }
 
+#task-count-tag,
+#completed-count-tag,
+.project-card-count-tag {
+    font-size: 0.85rem;
+    font-variant: normal;
+    padding: 0.3rem 0.75rem 0.25rem;
+    line-height: 1;
+}
+
 .minimal {
     border: none;
     background-color: transparent;
@@ -323,6 +332,105 @@ a {
     .sb-button:hover {
         transform: scale(1.05);
     }
+}
+
+/* ------MODALS */
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(6px);
+}
+
+dialog {
+    border: none;
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    width: min(480px, 90vw);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    background: var(--bright-white);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+dialog form label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--muted-text);
+    margin-top: 0.75rem;
+}
+
+dialog form label:has(+ input[required])::after {
+    content: ' *';
+    color: #B31B25;
+}
+
+dialog form label:first-child {
+    margin-top: 0;
+}
+
+dialog form textarea {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 0.625rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
+    color: var(--black-text);
+    background: var(--main-bg-color);
+    transition: border-color 0.15s ease;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+}
+
+dialog form textarea:focus {
+    outline: none;
+    border-color: var(--main-accent-blue);
+}
+
+dialog form input {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 0.625rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
+    color: var(--black-text);
+    background: var(--main-bg-color);
+    transition: border-color 0.15s ease;
+    width: 100%;
+}
+
+dialog form input:focus {
+    outline: none;
+    border-color: var(--main-accent-blue);
+}
+
+dialog form .form-btn {
+    margin-top: 1rem;
+    padding: 0.675rem 1.25rem;
+    border-radius: 0.625rem;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+dialog form .form-btn:first-of-type {
+    background: var(--main-accent-blue);
+    color: white;
+}
+
+dialog form .form-btn:last-of-type {
+    background: var(--main-bg-color);
+    color: var(--muted-text);
+}
+
+dialog form .form-btn:hover {
+    opacity: 0.85;
 }
 
 

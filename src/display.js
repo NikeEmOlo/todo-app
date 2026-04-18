@@ -3,15 +3,21 @@ import "./projects.css"
 import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject, renameProject, getProjectColor, hasProjectColor, setProjectColor } from "./tasks.js";
 
 const palette = [
-    "#001F40", "#003380", "#0055CC", "#007AFF", "#3395FF", "#66B0FF",
-    "#001A1F", "#003340", "#006675", "#009AB0", "#00E5FF", "#33EAFF",
-    "#1A0A1C", "#3D1A45", "#6D2280", "#A758B1", "#BC7DC4", "#D0A3D8",
-    "#001519", "#002B33", "#00404D", "#006875", "#009AB0", "#00CCDD",
-    "#1A1A1A", "#333333", "#666666", "#999999",
+    "#0055CC", "#007AFF", "#3395FF", "#66B0FF",
+    "#006675", "#009AB0", "#007A99",
+    "#6D2280", "#A758B1", "#BC7DC4",
+    "#006875", "#00869E", "#00CCDD",
 ]
 
 function randomColor() {
     return palette[Math.floor(Math.random() * palette.length)]
+}
+
+function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
@@ -19,6 +25,7 @@ import upCaret from "./assets/images/icon_caret_up.svg";
 import pencilIcon from "./assets/images/icon_edit_pencil.svg";
 
 let activeTab = "tasks";
+let switchToTab = null;
 
 // -------CREATING ELEMENTS------------//
 class Element {
@@ -105,6 +112,9 @@ class TaskCard extends Div {
         this.taskInfoWrapper = new Div(['task-info-wrap'])
         this.projectTag = new Div(['tag'])
         this.projectTag.el.textContent = task.project;
+        const projectColor = getProjectColor(task.project)
+        this.projectTag.el.style.color = projectColor
+        this.projectTag.el.style.backgroundColor = hexToRgba(projectColor, 0.15)
         this.timestamp = new Button(new Text('h6', `Due: ${task.displayDate}`, ['muted']), ['tag', 'minimal'])
         this.deleteIcon = new Element("img", ["delete-btn-img"], {src: trashIcon, alt: "delete"})
         this.deleteButton = new Button(this.deleteIcon, [], {id: "delete-task-btn"})
@@ -117,9 +127,12 @@ class TaskCard extends Div {
         //------Event listeners------//
         this.el.addEventListener("click", (e) => taskCardHandler(e, this));
         this.checkbox.el.addEventListener("change", () => {
-            task.toggleComplete() 
-                ? this.appendTo(document.querySelector(".completed-s1")) 
+            task.toggleComplete()
+                ? this.appendTo(document.querySelector(".completed-s1"))
                 : this.appendTo(document.querySelector(".tasks-s1"))
+            refreshExpandedProject()
+            updateTaskCounts()
+            loadSidebar()
         })
     }
 
@@ -132,19 +145,27 @@ class ProjectCard extends Div {
 
         this.titleRow = new Div(["project-card-title-row"])
         this.title = new Text("h2", project, ["project-card-title", "lighter-txt"])
+        this.taskCount = new Text("h2", count, ["project-card-count", "lighter-txt"])
+        this.countTag = new Text("div", count, ["tag", "project-card-count-tag"])
         this.pencil = new Element("img", ["project-card-pencil"], {src: pencilIcon, alt: "edit"})
         this.pencil.el.style.display = "none"
-        this.titleRow.append(this.title, this.pencil)
+        this.titleRow.append(this.title, this.taskCount, this.countTag, this.pencil)
 
-        this.taskCount = new Text("h2", count, ["project-card-count", "lighter-txt"])
         this.deleteIcon = new Element("img", ["delete-btn-img"], {src: trashIcon, alt: "delete"})
         this.deleteProjectBtn = new Button(this.deleteIcon, ["delete-project-btn"], {},)
         this.deleteProjectBtn.el.style.display = "none"
 
         this.deleteProjectBtn.append(this.deleteIcon)
         this.bottomRow = new Div(["project-card-bottom"])
-        this.bottomRow.append(this.taskCount, this.deleteProjectBtn)
-        this.append(this.titleRow, this.bottomRow)
+        this.bottomRow.append(this.deleteProjectBtn)
+        this.taskListContainer = new Div(["project-task-list"])
+        this.addTaskBtn = new Button("+ Add Task", ["project-add-task-btn"])
+        this.addTaskBtn.el.addEventListener("click", (e) => {
+            e.stopPropagation()
+            document.querySelector("#project").value = project.slice(1)
+            document.querySelector("#add-task-modal").showModal()
+        })
+        this.append(this.titleRow, this.bottomRow, this.taskListContainer, this.addTaskBtn)
 
         this.el.addEventListener("click", projectCardHandler)
     }
@@ -195,13 +216,23 @@ function initTabs() {
             tabController(e, tabs, sidebarBtn, tabConfig)})
     });
 
+    switchToTab = (tabName) => {
+        const config = tabConfig[tabName]
+        activeTab = config.active
+        Object.values(tabs).forEach(tab => tab.style.display = "none")
+        document.querySelector(config.tab).style.display = "flex"
+        sidebarBtn.textContent = config.btnLabel
+        sidebarBtn.onclick = config.onClick
+    }
+
     Object.keys(getProjects()).forEach(project => {
         if (!hasProjectColor(project)) setProjectColor(project, randomColor())
     })
     loadSidebar();
     loadProjectsTab();
+    updateTaskCounts();
 
-    allTasks.forEach(task => task.complete 
+    sortByDueDate(allTasks).forEach(task => task.complete
         ? displayElement(task, ".completed-s1")
         : displayElement(task, ".tasks-s1"))
     
@@ -213,6 +244,11 @@ function initTabs() {
     document.querySelector("#close-task-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector("#close-project-btn").addEventListener("click", (e) => e.target.closest("dialog").close());
     document.querySelector('#due-date').min = new Date().toISOString().slice(0, 10);
+    const descriptionField = document.querySelector('#task-description')
+    descriptionField.addEventListener('input', () => {
+        descriptionField.style.height = 'auto'
+        descriptionField.style.height = descriptionField.scrollHeight + 'px'
+    })
     document.querySelector(".edit-projects-btn").addEventListener("click", editProjects)
     setProjectOptions()
 }
@@ -234,8 +270,15 @@ function taskCardHandler(e, taskCard) {
     // delete
     if (el.classList.contains("delete-btn-img")) {
         const taskID = taskCard.el.dataset.id
+        const taskList = taskCard.el.closest(".project-task-list")
         deleteTaskData(taskID)
         taskCard.el.remove()
+        if (taskList) {
+            if (taskList.children.length === 0) taskList.closest(".project-card").classList.remove("expanded")
+        } else {
+            refreshExpandedProject()
+        }
+        updateTaskCounts()
         loadSidebar()
         return
     }
@@ -271,11 +314,13 @@ function handleFormSubmit(e) {
         const isNewProject = !Object.keys(getProjects()).includes(taskData.project)
         addTask(taskData)
         if (isNewProject) setProjectColor(taskData.project, randomColor())
+        refreshTasksList()
     }
     
     loadSidebar()
     setProjectOptions()
     loadProjectsTab()
+    updateTaskCounts()
 }
 
 function cleanFormData(form) {
@@ -329,6 +374,10 @@ function loadSidebar() {
             projectName.el.style.color = getProjectColor(project)
             const projectCount = new Text("h5", `${count}`, ["project-count"])
             wrapper.el.append(projectName.el, projectCount.el)
+            wrapper.el.addEventListener("click", () => {
+                if (switchToTab) switchToTab("Projects")
+                expandProject(project)
+            })
             sidebarContent.insertBefore(wrapper.el, sidebarBtn)
         })
     } else {
@@ -384,6 +433,62 @@ function editProjects() {
     }
 }
 
+function sortByDueDate(tasks) {
+    return [...tasks].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+}
+
+function refreshTasksList() {
+    const container = document.querySelector(".tasks-s1")
+    container.replaceChildren()
+    sortByDueDate(allTasks.filter(t => !t.complete)).forEach(task => displayElement(task, ".tasks-s1"))
+}
+
+function updateTaskCounts() {
+    const incomplete = allTasks.filter(t => !t.complete).length
+    const complete = allTasks.filter(t => t.complete).length
+    const taskTag = document.querySelector("#task-count-tag")
+    const completedTag = document.querySelector("#completed-count-tag")
+    if (taskTag) taskTag.textContent = `${incomplete} task${incomplete !== 1 ? 's' : ''}`
+    if (completedTag) completedTag.textContent = `${complete} task${complete !== 1 ? 's' : ''}`
+}
+
+function refreshExpandedProject() {
+    const expandedCard = document.querySelector(".project-card.expanded")
+    if (!expandedCard) return
+    const projectName = expandedCard.dataset.id
+    const taskListEl = expandedCard.querySelector(".project-task-list")
+    taskListEl.replaceChildren()
+    const incompleteTasks = sortByDueDate(allTasks.filter(task => task.project === projectName && !task.complete))
+    incompleteTasks.forEach(task => {
+        calcRelativeDate(task)
+        new TaskCard(task).appendTo(taskListEl)
+    })
+    expandedCard.querySelectorAll(".project-card-count, .project-card-count-tag")
+        .forEach(el => el.textContent = incompleteTasks.length)
+    if (taskListEl.children.length === 0) expandedCard.classList.remove("expanded")
+}
+
+function expandProject(projectName) {
+    const card = document.querySelector(`.project-card[data-id="${projectName}"]`)
+    if (!card) return
+
+    const isExpanded = card.classList.contains("expanded")
+
+    document.querySelectorAll(".project-card").forEach(c => {
+        c.querySelector(".project-task-list").replaceChildren()
+        c.classList.remove("expanded")
+    })
+
+    if (isExpanded) return
+
+    const taskListEl = card.querySelector(".project-task-list")
+    sortByDueDate(allTasks.filter(task => task.project === projectName && !task.complete)).forEach(task => {
+        calcRelativeDate(task)
+        new TaskCard(task).appendTo(taskListEl)
+    })
+    card.classList.add("expanded")
+}
+
 function restoreEditMode() {
     document.querySelectorAll(".delete-project-btn").forEach(btn => btn.style.display = "flex")
     document.querySelectorAll(".project-card-pencil").forEach(p => p.style.display = "inline")
@@ -436,6 +541,10 @@ function projectCardHandler(e) {
             }
         })
         return
+    }
+
+    if (!isEditing && !e.target.closest(".project-task-list")) {
+        expandProject(e.currentTarget.dataset.id)
     }
 }
 

@@ -39,7 +39,7 @@
                         <p class="subtitle">Focus on the high-impact tasks that will shift the course of your week</p>
                         <div class="info-bar">
                             <h5 class="muted">Priority Actions</h5>
-                            <div class="tag">1 placeholder</div>
+                            <div class="tag" id="task-count-tag"></div>
                         </div>
                     </div>
                     <!-- This is where tasks will go -->
@@ -98,7 +98,7 @@
                     <div class="completed-s1">
                         <div class="info-bar">
                             <h5 class="muted">Recently completed</h5>
-                            <div class="tag">1 placeholder</div>
+                            <div class="tag" id="completed-count-tag"></div>
                         </div>
                     </div>
                 </div>
@@ -109,8 +109,8 @@
         <form id="task-form">
             <label for="task-name">What do you need to get done?</label>
             <input type="text" name="title" id="task-name" maxlength="75" required>
-            <label for="task-description">Additional information</label>
-            <input type="text" name="description" id="task-description" maxlength="1000">
+            <label for="task-description">Description</label>
+            <textarea name="description" id="task-description" maxlength="1000" rows="2"></textarea>
             <label for="due-date">When is it due?</label>
             <input type="date" name="dueDate" id="due-date" required>
             <label for="project">Assign to a project</label>
