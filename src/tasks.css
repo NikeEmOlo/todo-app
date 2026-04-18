@@ -7,12 +7,17 @@
 }
 
 
-.tasks-s1{
+.tasks-s1,
+.completed-s1 {
     display: flex;
     flex-direction: column;
     width: clamp(300px, 80%, 960px);
     gap: 0.75rem;
+}
 
+.completed-s1 .task-card {
+    opacity: 0.55;
+    filter: grayscale(0.35);
 }
 
 .info-bar {

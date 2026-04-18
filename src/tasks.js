@@ -66,7 +66,8 @@ function renameProject(oldName, newName) {
 }
 
 function deleteTaskData(taskID) {
-    allTasks = allTasks.filter(task => task.id !== taskID);
+    const idx = allTasks.findIndex(task => task.id === taskID);
+    if (idx !== -1) allTasks.splice(idx, 1);
     saveToLocal("tasks", allTasks)
 }
 
@@ -75,7 +76,8 @@ function deleteProject(e) {
     let projectID = e.target.closest(".project-card").dataset.id
 
     let removeAllTasks = () => {
-        allTasks = allTasks.filter(task => task.project !== projectID)
+        const toRemove = allTasks.filter(task => task.project === projectID).map(t => t.id)
+        toRemove.forEach(id => { const i = allTasks.findIndex(t => t.id === id); if (i !== -1) allTasks.splice(i, 1) })
         saveToLocal("tasks", allTasks)
     }
 
@@ -107,22 +109,15 @@ function getProjects() {
         return projectCount;
     }, {});
 
-    const sortAlphabetical = Object.fromEntries(
-        Object.entries(tasksPerProject).sort(([a], [b]) => a.localeCompare(b))
-    );
-
-    let emptyProjects = [];
     projects.forEach(project => {
-        if (!(project in sortAlphabetical)) {
-            emptyProjects.push(project)
-        }
-    })
-    emptyProjects.sort((a, b) => a.localeCompare(b))
-    emptyProjects.forEach((project) => {
-        sortAlphabetical[project] = 0
+        if (!(project in tasksPerProject)) tasksPerProject[project] = 0
     })
 
-    return sortAlphabetical
+    return Object.fromEntries(
+        Object.entries(tasksPerProject).sort(([a, countA], [b, countB]) =>
+            countB - countA || a.localeCompare(b)
+        )
+    )
 }   
 
 //moved to bottom to allow use of Task class
