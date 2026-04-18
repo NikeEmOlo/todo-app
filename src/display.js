@@ -1,6 +1,6 @@
 import "./tasks.css"
 import "./projects.css"
-import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject, getProjectColor, hasProjectColor, setProjectColor } from "./tasks.js";
+import { addTask, addProject, allTasks, deleteTaskData, getProjects, deleteProject, renameProject, getProjectColor, hasProjectColor, setProjectColor } from "./tasks.js";
 
 const palette = [
     "#001F40", "#003380", "#0055CC", "#007AFF", "#3395FF", "#66B0FF",
@@ -16,6 +16,7 @@ function randomColor() {
 import trashIcon from "./assets/images/icon_trash.svg";
 import downCaret from "./assets/images/icon_caret_down.svg"
 import upCaret from "./assets/images/icon_caret_up.svg";
+import pencilIcon from "./assets/images/icon_edit_pencil.svg";
 
 let activeTab = "tasks";
 
@@ -129,16 +130,21 @@ class ProjectCard extends Div {
     constructor(project, count) {
         super(['project-card'], {'data-id': project})
 
+        this.titleRow = new Div(["project-card-title-row"])
         this.title = new Text("h2", project, ["project-card-title", "lighter-txt"])
+        this.pencil = new Element("img", ["project-card-pencil"], {src: pencilIcon, alt: "edit"})
+        this.pencil.el.style.display = "none"
+        this.titleRow.append(this.title, this.pencil)
+
         this.taskCount = new Text("h2", count, ["project-card-count", "lighter-txt"])
         this.deleteIcon = new Element("img", ["delete-btn-img"], {src: trashIcon, alt: "delete"})
         this.deleteProjectBtn = new Button(this.deleteIcon, ["delete-project-btn"], {},)
         this.deleteProjectBtn.el.style.display = "none"
-        
+
         this.deleteProjectBtn.append(this.deleteIcon)
         this.bottomRow = new Div(["project-card-bottom"])
         this.bottomRow.append(this.taskCount, this.deleteProjectBtn)
-        this.append(this.title, this.bottomRow)
+        this.append(this.titleRow, this.bottomRow)
 
         this.el.addEventListener("click", projectCardHandler)
     }
@@ -367,24 +373,69 @@ function editProjects() {
 
     if (editProjectsBtn.textContent.toLowerCase() === "edit projects") {
         deleteProjectBtns.forEach((button) => button.style.display = "flex")
+        document.querySelectorAll(".project-card-pencil").forEach(p => p.style.display = "inline")
         editProjectsBtn.textContent = "Stop editing"
+        editProjectsBtn.classList.add("stop-editing")
     } else {
         deleteProjectBtns.forEach((button) => button.style.display = "none")
+        document.querySelectorAll(".project-card-pencil").forEach(p => p.style.display = "none")
         editProjectsBtn.textContent = "Edit Projects"
+        editProjectsBtn.classList.remove("stop-editing")
     }
 }
 
+function restoreEditMode() {
+    document.querySelectorAll(".delete-project-btn").forEach(btn => btn.style.display = "flex")
+    document.querySelectorAll(".project-card-pencil").forEach(p => p.style.display = "inline")
+}
+
 function projectCardHandler(e) {
+    const editProjectsBtn = document.querySelector(".edit-projects-btn")
+    const isEditing = editProjectsBtn.textContent.toLowerCase() === "stop editing"
+
     if (e.target.closest(".delete-project-btn")) {
         deleteProject(e)
+        loadSidebar()
+        loadProjectsTab()
+        if (isEditing) restoreEditMode()
+        return
     }
 
-    loadSidebar()
-    loadProjectsTab()
+    if (isEditing && (e.target.classList.contains("project-card-title") || e.target.classList.contains("project-card-pencil"))) {
+        const card = e.target.closest(".project-card")
+        const titleEl = card.querySelector(".project-card-title")
+        const oldName = card.dataset.id
 
-    const editProjectsBtn = document.querySelector(".edit-projects-btn")
-    if (editProjectsBtn.textContent.toLowerCase() === "stop editing") {
-        document.querySelectorAll(".delete-project-btn").forEach(btn => btn.style.display = "flex")
+        const input = document.createElement("input")
+        input.type = "text"
+        input.value = oldName.slice(1)
+        input.className = "project-title-input"
+        titleEl.replaceWith(input)
+        input.focus()
+        input.select()
+
+        let saved = false
+        function confirm() {
+            if (saved) return
+            saved = true
+            const newName = "#" + input.value.replace(/^#+/, "").toLowerCase().split(" ").join("-")
+            if (newName && newName !== oldName) renameProject(oldName, newName)
+            loadSidebar()
+            loadProjectsTab()
+            restoreEditMode()
+        }
+
+        input.addEventListener("blur", confirm, { once: true })
+        input.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter") input.blur()
+            if (ev.key === "Escape") {
+                saved = true
+                loadSidebar()
+                loadProjectsTab()
+                restoreEditMode()
+            }
+        })
+        return
     }
 }
 

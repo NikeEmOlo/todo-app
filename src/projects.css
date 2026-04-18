@@ -4,7 +4,10 @@
     border: none;
     text-align: right;
     padding: 0 1rem;
+}
 
+.edit-projects-btn.stop-editing {
+    color: #B31B25;
 }
 
 #projects-s1 {
@@ -22,6 +25,29 @@
         padding: 32px;
         border-radius: 1rem;
         background-color: var(--bright-white);
+    }
+
+    .project-card-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .project-card-pencil {
+        width: 20px;
+        height: auto;
+        opacity: 0.6;
+        cursor: pointer;
+    }
+
+    .project-title-input {
+        font-size: clamp(1.25rem, 2vw, 2rem);
+        font-weight: bold;
+        border: none;
+        border-bottom: 2px solid currentColor;
+        background: transparent;
+        width: 100%;
+        outline: none;
     }
 
     .project-card-title {

@@ -54,6 +54,16 @@ function hasProjectColor(projectName) {
     return projectName in projectColors
 }
 
+function renameProject(oldName, newName) {
+    allProjects = allProjects.map(p => p === oldName ? newName : p)
+    allTasks.forEach(task => { if (task.project === oldName) task.project = newName })
+    projectColors[newName] = projectColors[oldName]
+    delete projectColors[oldName]
+    saveToLocal("projects", allProjects)
+    saveToLocal("tasks", allTasks)
+    saveToLocal("projectColors", projectColors)
+}
+
 function deleteTaskData(taskID) {
     allTasks = allTasks.filter(task => task.id !== taskID);
     saveToLocal("tasks", allTasks)
@@ -124,6 +134,7 @@ export {
     addProject,
     deleteTaskData,
     deleteProject,
+    renameProject,
     getProjects,
     getProjectColor,
     hasProjectColor,
