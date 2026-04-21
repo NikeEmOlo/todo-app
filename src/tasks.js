@@ -2,13 +2,13 @@ import {saveToLocal, loadFromLocal} from "./storage.js";
 import { displayElement } from "./display.js";
 
 class Task {
-    constructor({title, description, dueDate, project}) {
+    constructor({title, description, dueDate, project, id = crypto.randomUUID(), complete = false}) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.project = project;
-        this.id = crypto.randomUUID();
-        this.complete = false;
+        this.id = id;
+        this.complete = complete;
         this.displayDate = new Date(dueDate).toLocaleDateString(navigator.language, {
             day: "numeric",
             month: "long",
@@ -18,6 +18,7 @@ class Task {
 
     toggleComplete() {
         this.complete = !this.complete;
+        saveToLocal("tasks", allTasks)
         return this.complete
     }
 }
