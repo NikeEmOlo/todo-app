@@ -133,6 +133,7 @@ class TaskCard extends Div {
             refreshExpandedProject()
             updateTaskCounts()
             loadSidebar()
+            loadProjectsTab()
         })
     }
 
@@ -273,11 +274,8 @@ function taskCardHandler(e, taskCard) {
         const taskList = taskCard.el.closest(".project-task-list")
         deleteTaskData(taskID)
         taskCard.el.remove()
-        if (taskList) {
-            if (taskList.children.length === 0) taskList.closest(".project-card").classList.remove("expanded")
-        } else {
-            refreshExpandedProject()
-        }
+        refreshExpandedProject()
+        if (taskList) refreshTasksList()
         updateTaskCounts()
         loadSidebar()
         return
